@@ -1,0 +1,4 @@
+matplotlib==3.5.1
+requests==2.28.2
+pandas==2.0.3
+tqdm==4.65.0
