@@ -9,6 +9,10 @@ from matplotlib import ticker
 from data import get_new_data
 from summary import summarize_liquidations
 
+BACKGROUND_COLOR = "#0d1117"
+FIGURE_SIZE = (15, 7)
+COLORS_LABELS = {"#d9024b": "Shorts", "#45bf87": "Longs", "#f0b90b": "Price"}
+
 
 def human_format(number: float, absolute: bool = False, decimals: int = 0) -> str:
     """
@@ -56,6 +60,42 @@ def human_format(number: float, absolute: bool = False, decimals: int = 0) -> st
     return f"{rounded_number}{units[magnitude]}"
 
 
+def add_legend(ax):
+    # Create custom legend handles with square markers, including BTC price
+    legend_handles = [
+        plt.Line2D(
+            [0],
+            [0],
+            marker="s",
+            color=BACKGROUND_COLOR,
+            markerfacecolor=color,
+            markersize=10,
+            label=label,
+        )
+        for color, label in zip(
+            list(COLORS_LABELS.keys()), list(COLORS_LABELS.values())
+        )
+    ]
+
+    # Add legend
+    legend = ax.legend(
+        handles=legend_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.0),
+        ncol=len(legend_handles),
+        frameon=False,
+        fontsize="small",
+        labelcolor="white",
+    )
+
+    # Make legend text bold
+    for text in legend.get_texts():
+        text.set_fontweight("bold")
+
+    # Adjust layout to reduce empty space around the plot
+    plt.subplots_adjust(left=0.05, right=0.95, top=0.875, bottom=0.1)
+
+
 def liquidations_plot(df):
     """
     Copy chart like https://www.coinglass.com/LiquidationData
@@ -71,10 +111,11 @@ def liquidations_plot(df):
     df_without_price = df.drop("price", axis=1)
     df_without_price["Shorts"] = df_without_price["Shorts"] * -1
 
-    plt.style.use("dark_background")
-
     # This plot has 2 axes
     fig, ax1 = plt.subplots()
+    fig.patch.set_facecolor(BACKGROUND_COLOR)
+    ax1.set_facecolor(BACKGROUND_COLOR)
+
     ax2 = ax1.twinx()
 
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
@@ -98,24 +139,14 @@ def liquidations_plot(df):
         ticker.FuncFormatter(lambda x, _: f"${human_format(x, absolute=True)}")
     )
 
-    ax1.set_title("Total Liquidations")
-
     # Set price axis
     ax2.plot(df_price.index, df_price, color="#edba35", label="BTC Price")
     ax2.set_xlim([df_price.index[0], df_price.index[-1]])
     ax2.set_ylim(bottom=df_price.min().values * 0.95, top=df_price.max().values * 1.05)
     ax2.get_yaxis().set_major_formatter(lambda x, _: f"${human_format(x)}")
 
-    # Add combined legend
-    lines, labels = ax1.get_legend_handles_labels()
-    lines2, labels2 = ax2.get_legend_handles_labels()
-    ax2.legend(
-        lines + lines2,
-        labels + labels2,
-        loc="upper center",
-        fontsize="x-small",
-        ncol=3,
-    )
+    # Add combined legend using the custom add_legend function
+    add_legend(ax2)
 
     # Add gridlines
     plt.grid(axis="y", color="grey", linestyle="-.", linewidth=0.5, alpha=0.5)
@@ -125,13 +156,13 @@ def liquidations_plot(df):
     ax1.spines["bottom"].set_visible(False)
     ax1.spines["right"].set_visible(False)
     ax1.spines["left"].set_visible(False)
-    ax1.tick_params(left=False, bottom=False, right=False)
+    ax1.tick_params(left=False, bottom=False, right=False, colors="white")
 
     ax2.spines["top"].set_visible(False)
     ax2.spines["bottom"].set_visible(False)
     ax2.spines["right"].set_visible(False)
     ax2.spines["left"].set_visible(False)
-    ax2.tick_params(left=False, bottom=False, right=False)
+    ax2.tick_params(left=False, bottom=False, right=False, colors="white")
 
     # Fixes first and last bar not showing
     ax1.set_xlim(
@@ -144,7 +175,20 @@ def liquidations_plot(df):
     )
 
     # Set correct size
-    fig.set_size_inches(15, 6)
+    fig.set_size_inches(FIGURE_SIZE)
+
+    # Add the title in the top left corner
+    plt.text(
+        -0.025,
+        1.125,
+        "Total Liquidations Chart",
+        transform=ax1.transAxes,
+        fontsize=14,
+        verticalalignment="top",
+        horizontalalignment="left",
+        color="white",
+        weight="bold",
+    )
 
     plt.show()
 
