@@ -2,7 +2,7 @@ import glob
 import os
 import zipfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timedelta
+from datetime import datetime
 from io import BytesIO
 from xml.etree import ElementTree
 
