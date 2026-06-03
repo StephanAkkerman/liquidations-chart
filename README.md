@@ -1,6 +1,6 @@
 # Total Liquidation Chart 📊
 
-This is a simple Python script that generates a liquidation chart for Bitcoin using the style of [Coinglass](https://www.coinglass.com/LiquidationData). The total liquidation chart provides an overview of the short and long liquidations as well as the corresponding BTC price on that day. The settings can be adjusted to also use other cryptocurrencies listed on Binance. The resulting plot can be used as an indicator to determine when to buy or sell Bitcoin. The chart is generated using the matplotlib library in Python.
+This is a simple Python script that generates a liquidation chart for Bitcoin using the style of [Coinglass](https://www.coinglass.com/LiquidationData). The total liquidation chart provides an overview of the short and long liquidations as well as the corresponding BTC price on that day. The settings can also be adjusted to use other cryptocurrencies listed on Binance. The resulting plot can be used as an indicator to determine when to buy or sell Bitcoin. The chart is generated using the matplotlib library in Python.
 
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Supported versions">
@@ -12,7 +12,7 @@ This is a simple Python script that generates a liquidation chart for Bitcoin us
 
 ## Introduction
 
-I have previously recreated this chart for my [fintwit-bot](https://github.com/StephanAkkerman/fintwit-bot), unfortunately coinglass removed their API so I had to recreate it using other sources. I used the chart found on [Coinglass](https://www.coinglass.com/LiquidationData) as a reference. The data is fetched using [Binance Public Data](https://github.com/binance/binance-public-data/) and new data is added which each run.
+I have previously recreated this chart for my [fintwit-bot](https://github.com/StephanAkkerman/fintwit-bot), unfortunately coinglass removed their API so I had to recreate it using other sources. I used the chart found on [Coinglass](https://www.coinglass.com/LiquidationData) as a reference. The data is fetched using [Binance Public Data](https://github.com/binance/binance-public-data/) and new data is added with each run.
 
 ## Installation ⚙️
 
